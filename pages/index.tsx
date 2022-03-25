@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { getAllPostsForHome } from "./api/posts";
+import { getAllPostsForHome, IPost } from "./api/posts";
 
 const Home: NextPage = () => {
-  const [posts, setPosts] = useState();
+  const [posts, setPosts] = useState<IPost[]>();
   const [language, setLanguage] = useState("pl");
 
   useEffect(() => {
@@ -32,8 +32,8 @@ const Home: NextPage = () => {
             AKTUALNOŚCI
             {posts &&
               posts.map((post: any) => (
-                <div key={post.title.rendered}>
-                  <h2>{post.title.rendered}</h2>
+                <div key={post.title}>
+                  <h2>{post.title}</h2>
                 </div>
               ))}
           </div>
