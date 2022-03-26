@@ -1,14 +1,18 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import ReactCountryFlag from "react-country-flag";
+import { getAllFundraisersForHome, IFundraiser } from "./api/fundraisers";
 import { getAllPostsForHome, IPost } from "./api/posts";
 
 const Home: NextPage = () => {
   const [posts, setPosts] = useState<IPost[]>();
+  const [fundraisers, setFundraisers] = useState<IFundraiser[]>();
   const [language, setLanguage] = useState("pl");
 
   useEffect(() => {
     getAllPostsForHome(language).then((data) => setPosts(data));
+    getAllFundraisersForHome(language).then((data) => setFundraisers(data));
   }, [language]);
 
   return (
@@ -20,15 +24,43 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="">
-        <div>
-          <button onClick={() => setLanguage("pl")}>PL</button>
-          <button onClick={() => setLanguage("en")}>EN</button>
-          <button onClick={() => setLanguage("uk")}>UA</button>
+        <div className="fixed top-0 right-0">
+          <button onClick={() => setLanguage("pl")}>
+            <ReactCountryFlag
+              countryCode="PL"
+              style={{
+                fontSize: "2em",
+                lineHeight: "2em",
+              }}
+              aria-label="Polski"
+            />
+          </button>
+          <button onClick={() => setLanguage("en")}>
+            <ReactCountryFlag
+              countryCode="GB"
+              style={{
+                fontSize: "2em",
+                lineHeight: "2em",
+              }}
+              aria-label="English"
+            />
+          </button>
+          <button onClick={() => setLanguage("uk")}>
+            <ReactCountryFlag
+              countryCode="UA"
+              style={{
+                fontSize: "2em",
+                lineHeight: "2em",
+              }}
+              aria-label="Ukrainian"
+            />
+          </button>
         </div>
-        <h1 className="">LOGO</h1>
-
-        <div>
-          <div>
+        <div className="text-center h-24 bg-slate-400">
+          <h1 className="">LOGO</h1>
+        </div>
+        <div className="flex flex-col xl:flex-row justify-around h-96">
+          <div className="basis-1/3 bg-red-400">
             AKTUALNOŚCI
             {posts &&
               posts.map((post: any) => (
@@ -37,11 +69,19 @@ const Home: NextPage = () => {
                 </div>
               ))}
           </div>
-          <div>FORMULARZ</div>
-          <div>ZBIORKI</div>
+          <div className="basis-1/3 bg-orange-400">FORMULARZ</div>
+          <div className="basis-1/3 bg-amber-400">
+            ZBIORKI
+            {fundraisers &&
+              fundraisers.map((post: any) => (
+                <div key={post.title}>
+                  <h2>{post.title}</h2>
+                </div>
+              ))}
+          </div>
         </div>
-        <div>KIM JESTEŚMY</div>
-        <div>Z KIM WSPOŁPRACUJEMY</div>
+        <div className="h-48 bg-green-400">KIM JESTEŚMY</div>
+        <div className="h-48 bg-teal-400">Z KIM WSPOŁPRACUJEMY</div>
       </main>
     </div>
   );
