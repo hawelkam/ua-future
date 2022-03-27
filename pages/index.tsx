@@ -8,7 +8,7 @@ import { getAllPostsForHome, IPost } from "./api/posts";
 const Home: NextPage = () => {
   const [posts, setPosts] = useState<IPost[]>();
   const [fundraisers, setFundraisers] = useState<IFundraiser[]>();
-  const [language, setLanguage] = useState("pl");
+  const [language, setLanguage] = useState("EN");
 
   useEffect(() => {
     getAllPostsForHome(language).then((data) => setPosts(data));
@@ -25,7 +25,7 @@ const Home: NextPage = () => {
 
       <main className="">
         <div className="fixed top-0 right-0">
-          <button onClick={() => setLanguage("pl")}>
+          <button onClick={() => setLanguage("PL")}>
             <ReactCountryFlag
               countryCode="PL"
               style={{
@@ -35,7 +35,7 @@ const Home: NextPage = () => {
               aria-label="Polski"
             />
           </button>
-          <button onClick={() => setLanguage("en")}>
+          <button onClick={() => setLanguage("EN")}>
             <ReactCountryFlag
               countryCode="GB"
               style={{
@@ -45,7 +45,7 @@ const Home: NextPage = () => {
               aria-label="English"
             />
           </button>
-          <button onClick={() => setLanguage("uk")}>
+          <button onClick={() => setLanguage("UK")}>
             <ReactCountryFlag
               countryCode="UA"
               style={{

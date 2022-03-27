@@ -5,32 +5,36 @@ export interface IPost {
   slug: string;
 }
 
-const getPostsData = (json: any[]): IPost[] =>
-  json.map((item) => ({
-    content: item.content.rendered,
-    excerpt: item.excerpt.rendered,
-    title: item.title.rendered,
-    slug: item.slug.rendered,
-  }));
-
 export async function getAllPostsForHome(lang: string): Promise<IPost[]> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_WORDPRESS_URL}posts?lang=${lang}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+  console.log(lang);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_WORDPRESS_URL}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `
+        query GetPosts($lang: LanguageCodeFilterEnum!) {
+          posts(where: { language: $lang }) {
+            nodes {
+              title
+            }
+          }
+        }
+      `,
+      variables: {
+        lang,
       },
-    }
-  );
+    }),
+  });
 
   const json = await res.json();
+  console.log(json);
+
   if (json.errors) {
     console.error(json.errors);
     throw new Error("Failed to fetch API");
   }
 
-  const mappedPosts = getPostsData(json);
-
-  return mappedPosts;
+  return json.data.posts.nodes;
 }

@@ -3,24 +3,29 @@ export interface IFundraiser {
   slug: string;
 }
 
-const getFundraiserData = (json: any[]): IFundraiser[] =>
-  json.map((item) => ({
-    title: item.title.rendered,
-    slug: item.slug.rendered,
-  }));
-
 export async function getAllFundraisersForHome(
   lang: string
 ): Promise<IFundraiser[]> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_WORDPRESS_URL}fundraiser?lang=${lang}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+  const res = await fetch(`${process.env.NEXT_PUBLIC_WORDPRESS_URL}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `
+        query GetFundraisers($lang: LanguageCodeFilterEnum!) {
+          fundraisers(where: { language: $lang }) {
+            nodes {
+              title
+            }
+          }
+        }
+      `,
+      variables: {
+        lang,
       },
-    }
-  );
+    }),
+  });
 
   const json = await res.json();
   if (json.errors) {
@@ -28,7 +33,5 @@ export async function getAllFundraisersForHome(
     throw new Error("Failed to fetch API");
   }
 
-  const mappedFundraisers = getFundraiserData(json);
-
-  return mappedFundraisers;
+  return json.data.fundraisers.nodes;
 }
