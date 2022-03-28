@@ -5,6 +5,7 @@ import { getAllFundraisersForHome, IFundraiser } from "./api/fundraisers";
 import { getAllPostsForHome, IPost } from "./api/posts";
 import { useTranslation } from "react-i18next";
 import SwitchLanguagePanel from "../components/SwitchLanguagePanel";
+import Navbar from "../components/Navbar";
 
 const Home: NextPage = () => {
   const [posts, setPosts] = useState<IPost[]>();
@@ -30,9 +31,7 @@ const Home: NextPage = () => {
 
       <main className="">
         <SwitchLanguagePanel />
-        <div className="text-center h-24 bg-slate-400">
-          <h1 className="">LOGO</h1>
-        </div>
+        <Navbar />
         <div className="flex flex-col xl:flex-row justify-around h-96">
           <div className="basis-1/3 bg-red-400">
             {t("news-header")}
@@ -50,22 +49,20 @@ const Home: NextPage = () => {
               fundraisers.map((fundraiser: any) => (
                 <div key={fundraiser.title}>
                   <h2>{fundraiser.title}</h2>
-                  {fundraiser.fundraiserLink && (
+                  {/* {fundraiser.fundraiserLink && (
                     <div
                       style={{
                         position: "relative",
-                        height: "457.461px",
                         overflow: "hidden",
                       }}
                     >
                       <iframe
                         width="400"
-                        height="457.461"
-                        src={`${fundraiser.fundraiserLink.fundraiserlink}/widget/13`}
+                        src={`${fundraiser.fundraiserLink.fundraiserlink}/widget/14`}
                         scrolling="no"
                       ></iframe>
                     </div>
-                  )}
+                  )} */}
                 </div>
               ))}
           </div>
