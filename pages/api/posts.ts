@@ -6,8 +6,7 @@ export interface IPost {
 }
 
 export async function getAllPostsForHome(lang: string): Promise<IPost[]> {
-  console.log(lang);
-  const res = await fetch(`${process.env.NEXT_PUBLIC_WORDPRESS_URL}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -29,8 +28,6 @@ export async function getAllPostsForHome(lang: string): Promise<IPost[]> {
   });
 
   const json = await res.json();
-  console.log(json);
-
   if (json.errors) {
     console.error(json.errors);
     throw new Error("Failed to fetch API");

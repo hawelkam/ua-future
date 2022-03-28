@@ -1,19 +1,24 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import ReactCountryFlag from "react-country-flag";
 import { getAllFundraisersForHome, IFundraiser } from "./api/fundraisers";
 import { getAllPostsForHome, IPost } from "./api/posts";
+import { useTranslation } from "react-i18next";
+import SwitchLanguagePanel from "../components/SwitchLanguagePanel";
 
 const Home: NextPage = () => {
   const [posts, setPosts] = useState<IPost[]>();
   const [fundraisers, setFundraisers] = useState<IFundraiser[]>();
-  const [language, setLanguage] = useState("EN");
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
-    getAllPostsForHome(language).then((data) => setPosts(data));
-    getAllFundraisersForHome(language).then((data) => setFundraisers(data));
-  }, [language]);
+    getAllPostsForHome(i18n.language.toUpperCase()).then((data) =>
+      setPosts(data)
+    );
+    getAllFundraisersForHome(i18n.language.toUpperCase()).then((data) =>
+      setFundraisers(data)
+    );
+  }, [i18n.language]);
 
   return (
     <div className="">
@@ -24,44 +29,13 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="">
-        <div className="fixed top-0 right-0">
-          <button onClick={() => setLanguage("PL")}>
-            <ReactCountryFlag
-              countryCode="PL"
-              style={{
-                fontSize: "2em",
-                lineHeight: "2em",
-              }}
-              aria-label="Polski"
-            />
-          </button>
-          <button onClick={() => setLanguage("EN")}>
-            <ReactCountryFlag
-              countryCode="GB"
-              style={{
-                fontSize: "2em",
-                lineHeight: "2em",
-              }}
-              aria-label="English"
-            />
-          </button>
-          <button onClick={() => setLanguage("UK")}>
-            <ReactCountryFlag
-              countryCode="UA"
-              style={{
-                fontSize: "2em",
-                lineHeight: "2em",
-              }}
-              aria-label="Ukrainian"
-            />
-          </button>
-        </div>
+        <SwitchLanguagePanel />
         <div className="text-center h-24 bg-slate-400">
           <h1 className="">LOGO</h1>
         </div>
         <div className="flex flex-col xl:flex-row justify-around h-96">
           <div className="basis-1/3 bg-red-400">
-            AKTUALNOŚCI
+            {t("news-header")}
             {posts &&
               posts.map((post: any) => (
                 <div key={post.title}>
@@ -69,19 +43,35 @@ const Home: NextPage = () => {
                 </div>
               ))}
           </div>
-          <div className="basis-1/3 bg-orange-400">FORMULARZ</div>
+          <div className="basis-1/3 bg-orange-400">{t("form-header")}</div>
           <div className="basis-1/3 bg-amber-400">
-            ZBIORKI
+            {t("fundraisers-header")}
             {fundraisers &&
-              fundraisers.map((post: any) => (
-                <div key={post.title}>
-                  <h2>{post.title}</h2>
+              fundraisers.map((fundraiser: any) => (
+                <div key={fundraiser.title}>
+                  <h2>{fundraiser.title}</h2>
+                  {fundraiser.fundraiserLink && (
+                    <div
+                      style={{
+                        position: "relative",
+                        height: "457.461px",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <iframe
+                        width="400"
+                        height="457.461"
+                        src={`${fundraiser.fundraiserLink.fundraiserlink}/widget/13`}
+                        scrolling="no"
+                      ></iframe>
+                    </div>
+                  )}
                 </div>
               ))}
           </div>
         </div>
-        <div className="h-48 bg-green-400">KIM JESTEŚMY</div>
-        <div className="h-48 bg-teal-400">Z KIM WSPOŁPRACUJEMY</div>
+        <div className="h-48 bg-green-400">{t("about-header")}</div>
+        <div className="h-48 bg-teal-400">{t("coop-header")}</div>
       </main>
     </div>
   );

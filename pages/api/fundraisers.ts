@@ -1,12 +1,15 @@
 export interface IFundraiser {
   title: string;
   slug: string;
+  fundraiserLink: {
+    fundraiserlink: string;
+  };
 }
 
 export async function getAllFundraisersForHome(
   lang: string
 ): Promise<IFundraiser[]> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_WORDPRESS_URL}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -17,6 +20,9 @@ export async function getAllFundraisersForHome(
           fundraisers(where: { language: $lang }) {
             nodes {
               title
+              fundraiserLink {
+                  fundraiserlink
+              }
             }
           }
         }
